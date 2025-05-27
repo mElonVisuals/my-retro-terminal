@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" viewBox="0 0 600 200">
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ff9d"/>
+      <stop offset="50%" stop-color="#009dff"/>
+      <stop offset="100%" stop-color="#00ff9d"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="200" fill="black"/>
+  <text x="50%" y="50%" 
+        font-family="'Courier New', monospace" 
+        font-size="72" 
+        fill="url(#gradient)" 
+        text-anchor="middle" 
+        dominant-baseline="middle"
+        filter="url(#glow)"
+        font-weight="bold"
+        letter-spacing="2px">
+    RETROSH
+  </text>
+  <text x="50%" y="75%" 
+        font-family="'Courier New', monospace" 
+        font-size="18" 
+        fill="#00ff9d" 
+        text-anchor="middle" 
+        dominant-baseline="middle"
+        font-style="italic"
+        filter="url(#glow)">
+    ADVANCED TERMINAL SYSTEM v2.5
+  </text>
+</svg>

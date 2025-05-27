@@ -1,13 +1,276 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Retro Terminal CSS - Complete Version */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+  /* Color Themes */
+  --green: #0fa;
+  --amber: #ff8300;
+  --blue: #00f4ff;
+  --red: #ff003c;
+  --purple: #6e44ff;
+  --cyan: #00d5ff;
+  --matrix-green: #00ff41;
+  
+  /* Defaults */
+  --glow-color: var(--green);
+  --scanline-color: rgba(0, 255, 100, 0.05);
+  --terminal-bg: rgba(0, 20, 0, 0.95);
+  --crt-flicker: 0.15s;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Base Styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--glow-color);
+  overflow: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* CRT Global Effects */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: 
+    linear-gradient(var(--scanline-color) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 3px, 4px 100%;
+  z-index: 100;
+  pointer-events: none;
+  animation: flicker var(--crt-flicker) infinite alternate;
+}
+
+/* Matrix Mode Overrides */
+body.matrix-mode {
+  --glow-color: var(--matrix-green);
+  --scanline-color: rgba(0, 255, 65, 0.1);
+}
+
+/* Animations */
+@keyframes flicker {
+  0% { opacity: 0.8; }
+  10% { opacity: 0.9; }
+  30% { opacity: 0.7; }
+  50% { opacity: 1; }
+  70% { opacity: 0.8; }
+  100% { opacity: 0.9; }
+}
+
+@keyframes text-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 
+      0 0 4px var(--glow-color),
+      0 0 11px var(--glow-color),
+      0 0 19px var(--glow-color),
+      0 0 40px var(--glow-color);
+  }
+  20%, 24%, 55% {        
+    text-shadow: none;
+  }
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes matrixScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 10px; }
+}
+
+@keyframes terminal-glow {
+  0% { box-shadow: 0 0 5px var(--glow-color), inset 0 0 5px var(--glow-color); }
+  100% { box-shadow: 0 0 15px var(--glow-color), inset 0 0 15px var(--glow-color); }
+}
+
+/* Boot Screen */
+.boot-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+  gap: 1.5rem;
+  animation: boot-fade 3s ease-in-out;
+}
+
+@keyframes boot-fade {
+  0% { opacity: 0; background-color: black; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Terminal Container */
+.terminal-container {
+  position: relative;
+  background: var(--terminal-bg);
+  border: 1px solid var(--glow-color);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  animation: terminal-glow 2s infinite alternate;
+  backdrop-filter: blur(1px);
+}
+
+/* CRT Effect for Terminal */
+.crt-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(rgba(0, 255, 0, 0.03) 50%, 
+    rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 2px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Noise Overlay */
+.noise-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVGhDY/j//z8Druz//x8wYGBg+A8ZMPz//x8yYPj//z9kwPD//3/IgOH///+QAcP///8hA4b///9DBgz///+HDBj+//8fMgAAdf8WZ5JwX7QAAAAASUVORK5CYII=');
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Matrix Effect */
+.matrix-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.1)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="green" stroke-width="0.5" stroke-opacity="0.1"/></svg>');
+  background-size: 10px 10px;
+  animation: matrixScroll 1s linear infinite;
+  z-index: 5;
+}
+
+/* Text Effects */
+.glow-text {
+  text-shadow: 0 0 1px var(--glow-color), 
+               0 0 2px var(--glow-color),
+               0 0 3px var(--glow-color);
+}
+
+/* Theme Glows */
+.shadow-glow-green {
+  box-shadow: 0 0 15px var(--green), inset 0 0 10px var(--green);
+}
+
+.shadow-glow-amber {
+  box-shadow: 0 0 15px var(--amber), inset 0 0 10px var(--amber);
+}
+
+.shadow-glow-cyber {
+  box-shadow: 0 0 15px var(--purple), 0 0 30px var(--cyan), inset 0 0 10px var(--purple);
+}
+
+.shadow-glow-matrix {
+  box-shadow: 0 0 20px var(--matrix-green), inset 0 0 10px var(--matrix-green);
+}
+
+/* Terminal Elements */
+.terminal-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 2rem;
+  padding-top: 4rem;
+}
+
+.terminal-content {
+  font-family: inherit;
+}
+
+.terminal-input {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  width: 100%;
+  min-width: 50%;
+  caret-color: transparent;
+}
+
+.prompt {
+  user-select: none;
+}
+
+.cursor {
+  animation: blink 1s step-end infinite;
+}
+
+/* Logo Styling */
+.logo {
+  width: 250px;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.button-retro {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--glow-color);
+  background: transparent;
+  color: var(--glow-color);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.button-retro:hover {
+  background: var(--glow-color);
+  color: black;
+  text-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .terminal-container {
+    height: 70vh;
+    width: 95%;
+  }
+  
+  body::before {
+    background-size: 100% 2px, 3px 100%;
+  }
+  
+  .logo {
+    width: 200px;
+  }
+}
+
+/* ASCII Art Styling */
+.ascii-art {
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: pre;
+  font-family: monospace;
 }
